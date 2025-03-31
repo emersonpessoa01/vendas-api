@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/produtos")
 
-public class ProdutoContoller {
+public class ProdutoController {
     @PostMapping
     public ProdutoFormRequest salvar(@RequestBody ProdutoFormRequest produto) {
         System.out.println(produto +": Produto salvo com sucesso!");
