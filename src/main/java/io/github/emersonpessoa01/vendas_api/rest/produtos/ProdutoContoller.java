@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/produtos")
 
 public class ProdutoContoller {
-    @PostMapping("/")
+    @PostMapping
     public ProdutoFormRequest salvar(@RequestBody ProdutoFormRequest produto) {
         System.out.println(produto +": Produto salvo com sucesso!");
         return produto; // Retorna o produto com os dados preenchidos
