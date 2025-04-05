@@ -21,15 +21,16 @@ public class ProdutoController {
 
     @PostMapping
     public ProdutoFormRequest salvar(@RequestBody ProdutoFormRequest produto) {
-        Produto entidadeProduto = new Produto(null, produto.getNome(), produto.getDescricao(), produto.getPreco(),
-                produto.getSku());
+        // Produto entidadeProduto = new Produto(null, produto.getNome(), produto.getDescricao(), produto.getPreco(),
+        //         produto.getSku());
+        /* EntidadeProduto foi substituído por produto.toModel() */
+        Produto entidadeProduto = produto.toModel(); // Converte o ProdutoFormRequest para Produto
 
         // Salva o produto no banco de dados
         produtoRepository.save(entidadeProduto);
-
-        System.out.println("Imprimindo Entidade Produto" + entidadeProduto);
-
+        // System.out.println("Imprimindo Entidade Produto" + entidadeProduto);
         // System.out.println(produto +": Produto salvo com sucesso!");
-        return produto; // Retorna o produto com os dados preenchidos
+        // return produto; // Retorna o produto com os dados preenchidos
+        return ProdutoFormRequest.fromModel(entidadeProduto); // Retorna o produto com os dados preenchidos
     }
 }
