@@ -3,18 +3,9 @@ package io.github.emersonpessoa01.vendas_api.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 @Entity
 @Table(name = "produto")
@@ -29,37 +20,42 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Lembrando que não é necessário colocar o @Column em todos os atributos, pois
-    // o JPA já faz isso por padrão.
+    // Lembrando que não é necessário colocar o @Column em todos os atributos,
+    // pois o JPA já faz isso por padrão. No entanto, definimos atributos como
+    // length, nullable e unique explicitamente por clareza e controle.
+    
     @Column(name = "nome", length = 100, nullable = false)
+    @NotBlank
+    @Size(max = 100)
     private String nome;
+
     @Column(name = "descricao", length = 255, nullable = false)
+    @NotBlank
+    @Size(max = 255)
     private String descricao;
+
     @Column(name = "preco", precision = 16, scale = 2, nullable = false)
+    @NotNull
+    @DecimalMin("0.0")
     private BigDecimal preco;
+
     @Column(name = "sku", length = 20, nullable = false, unique = true)
+    @NotBlank
+    @Size(max = 20)
     private String sku;
-    @Column(name = "data_cadastro", nullable = false)
+
+    @Column(name = "data_cadastro", nullable = false, updatable = false)
     private LocalDate dataCadastro;
 
+    /* Fazer o prePersist para setar a data de cadastro do produto */
+    @PrePersist
+    public void prePersist() {
+        this.dataCadastro = LocalDate.now();
+    }
 
     @Override
     public String toString() {
         return "Produto [id=" + id + ", nome=" + nome + ", descricao=" + descricao + ", preco=" + preco + ", sku=" + sku
                 + ", dataCadastro=" + dataCadastro + "]";
     }
-
-    public LocalDate getDataCadastro() {
-        return dataCadastro;
-    }
-    
-    public void setDataCadastro(LocalDate dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-    /* Fazer o prePersist para setar a data de cadastro do produto */
-    @PrePersist
-    public void prePersist() {
-        setDataCadastro(LocalDate.now());
-    }
-
 }
