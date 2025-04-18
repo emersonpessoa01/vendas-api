@@ -1,6 +1,9 @@
 package io.github.emersonpessoa01.vendas_api.rest.produtos;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+import java.util.List;
 
 
 import org.springframework.http.ResponseEntity;
@@ -54,5 +57,14 @@ public class ProdutoController {
         return produto
                 .map(p -> ResponseEntity.ok(ProdutoFormRequest.fromModel(p)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    // GET: Buscar todos os produtos
+    @GetMapping
+    public ResponseEntity<Iterable<ProdutoFormRequest>> buscarTodos() {
+        Iterable<Produto> produtos = produtoRepository.findAll();
+        List<ProdutoFormRequest> produtoFormRequests = StreamSupport.stream(produtos.spliterator(), false)
+                .map(ProdutoFormRequest::fromModel)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(produtoFormRequests);
     }
 }
